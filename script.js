@@ -1,0 +1,202 @@
+// Wait for DOM to fully load before running any code
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ==========================================
+    // A. DARK MODE / LIGHT MODE TOGGLE
+    // ==========================================
+    const themeBtn = document.getElementById('themeBtn');
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            
+            // Update button text based on current mode
+            if (document.body.classList.contains('dark-mode')) {
+                themeBtn.textContent = 'Toggle Light Mode';
+            } else {
+                themeBtn.textContent = 'Toggle Dark Mode';
+            }
+        });
+    }
+
+    // ==========================================
+    // B. EDIT JOB TITLE FEATURE
+    // ==========================================
+    const editJobBtn = document.getElementById('editJobBtn');
+    const jobTitle = document.getElementById('jobTitle');
+
+    if (editJobBtn && jobTitle) {
+        editJobBtn.addEventListener('click', function() {
+            const newTitle = prompt('Enter your new job title:', jobTitle.textContent);
+            
+            // Only update if user entered something (not null or empty)
+            if (newTitle !== null && newTitle.trim() !== '') {
+                jobTitle.textContent = newTitle.trim();
+            }
+        });
+    }
+
+    // ==========================================
+    // C. SHOW/HIDE SKILLS FEATURE
+    // ==========================================
+    const toggleSkillsBtn = document.getElementById('toggleSkillsBtn');
+    const skillsSection = document.getElementById('skillsSection');
+
+    if (toggleSkillsBtn && skillsSection) {
+        toggleSkillsBtn.addEventListener('click', function() {
+            if (skillsSection.style.display === 'none') {
+                skillsSection.style.display = 'block';
+                toggleSkillsBtn.textContent = 'Hide Skills';
+            } else {
+                skillsSection.style.display = 'none';
+                toggleSkillsBtn.textContent = 'Show Skills';
+            }
+        });
+    }
+
+    // ==========================================
+    // D. LIVE CHARACTER COUNTER
+    // ==========================================
+    const msgBox = document.getElementById('msgBox');
+    const counter = document.getElementById('counter');
+
+    if (msgBox && counter) {
+        msgBox.addEventListener('keyup', function() {
+            const maxLength = msgBox.getAttribute('maxlength');
+            const currentLength = msgBox.value.length;
+            const remaining = maxLength - currentLength;
+            
+            counter.textContent = remaining;
+            
+            // Change color when running out of characters
+            if (remaining <= 20) {
+                counter.style.color = 'red';
+                counter.style.fontWeight = 'bold';
+            } else {
+                counter.style.color = 'inherit';
+                counter.style.fontWeight = 'normal';
+            }
+        });
+    }
+
+    // ==========================================
+    // E. FORM VALIDATION
+    // ==========================================
+    const messageForm = document.getElementById('messageForm');
+    const nameField = document.getElementById('nameField');
+    const emailField = document.getElementById('emailField');
+
+    if (messageForm) {
+        messageForm.addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault(); // Stop form submission
+            }
+        });
+    }
+
+    function validateForm() {
+        // Check if name field is empty
+        if (nameField.value.trim() === '') {
+            alert('Please enter your name!');
+            nameField.focus();
+            return false;
+        }
+        
+        // Check if email field is empty
+        if (emailField.value.trim() === '') {
+            alert('Please enter your email!');
+            emailField.focus();
+            return false;
+        }
+        
+        // Basic email format validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(emailField.value)) {
+            alert('Please enter a valid email address!');
+            emailField.focus();
+            return false;
+        }
+        
+        // Check if message is empty
+        if (msgBox.value.trim() === '') {
+            alert('Please enter a message!');
+            msgBox.focus();
+            return false;
+        }
+        
+        // If all validations pass
+        alert('Form submitted successfully!');
+        return true;
+    }
+
+    // ==========================================
+    // F. DISPLAY TODAY'S DATE IN FOOTER
+    // ==========================================
+    const dateDisplay = document.getElementById('dateDisplay');
+
+    function displayCurrentDate() {
+        const today = new Date();
+        
+        // Format the date nicely
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        
+        const formattedDate = today.toLocaleDateString('en-US', options);
+        dateDisplay.textContent = `Today is ${formattedDate}`;
+    }
+
+    // Call the function when page loads
+    if (dateDisplay) {
+        displayCurrentDate();
+    }
+
+    // ==========================================
+    // G. EXTRA FEATURE: FONT SIZE ADJUSTER
+    // ==========================================
+    const fontSizeUpBtn = document.getElementById('fontSizeUpBtn');
+    const fontSizeDownBtn = document.getElementById('fontSizeDownBtn');
+    const mainContent = document.getElementById('main-content');
+
+    let currentFontSize = 16; // Default font size in pixels
+
+    if (fontSizeUpBtn && mainContent) {
+        fontSizeUpBtn.addEventListener('click', function() {
+            if (currentFontSize < 24) { // Max limit
+                currentFontSize += 2;
+                mainContent.style.fontSize = currentFontSize + 'px';
+            }
+        });
+    }
+
+    if (fontSizeDownBtn && mainContent) {
+        fontSizeDownBtn.addEventListener('click', function() {
+            if (currentFontSize > 12) { // Min limit
+                currentFontSize -= 2;
+                mainContent.style.fontSize = currentFontSize + 'px';
+            }
+        });
+    }
+
+    // ==========================================
+    // ADDITIONAL: Smooth Scroll for Navigation
+    // ==========================================
+    document.querySelectorAll('.navbar a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+}); // End of DOMContentLoaded
